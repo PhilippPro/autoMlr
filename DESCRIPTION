@@ -3,7 +3,9 @@ Title: Automatic Machine Learning with mlr
 Version: 0.1
 Authors@R: person("Philipp", "Probst", email = "philipp_probst@gmx.de", role = c("aut", "cre"))
 Description: Automatic Machine Learning with tuning tailored to the algorithms and runtime specification, based on the R-package mlr.
-Depends: R (>= 3.3.3)
+Depends: 
+    R (>= 3.3.3),
+    mlr (>= 2.11)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
