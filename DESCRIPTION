@@ -1,4 +1,4 @@
-Package: auto-mlr
+Package: autoMlr
 Title: Automatic Machine Learning with mlr
 Version: 0.1
 Authors@R: person("Philipp", "Probst", email = "philipp_probst@gmx.de", role = c("aut", "cre"))
