@@ -22,10 +22,10 @@ autoMlr = function(task, runtime) {
   lrn[[3]] = makeLearner(cl = lrn.name, par.vals = as.list(defaults$kknn$default[1,, drop = F]))
   lrn.name = paste0(type, ".liquidSVM")
   lrn[[4]] = makeLearner(cl = lrn.name)
-  lrn.name = paste0(type, ".tuneRanger")
-  lrn[[5]] = makeLearner(cl = lrn.name, par.vals = list(time.budget = 900))
-  lrn.name = paste0(type, ".autoxgboost")
-  lrn[[6]] = makeLearner(cl = lrn.name, par.vals = list(time.budget = 1800))
+  #lrn.name = paste0(type, ".tuneRanger")
+  #lrn[[5]] = makeLearner(cl = lrn.name) #, par.vals = list(time.budget = 900))
+  #lrn.name = paste0(type, ".autoxgboost")
+  #lrn[[6]] = makeLearner(cl = lrn.name) #, par.vals = list(time.budget = 1800))
 
   # make weighted learner?
   mod = list()
@@ -37,11 +37,26 @@ autoMlr = function(task, runtime) {
   return(mod)
 }
 
-predict.autoMlr = function(mod, task) {
-  pred = list()
-  for(i in 1:length(mod))
-    pred[[i]] = predict(mod[[i]], task)
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
 }
+
+predict.autoMlr = function(mod, newdata, predict.type = "response") {
+  pred = list()
+  if(predict.type == "response") {
+    for(i in 1:length(mod))
+      pred[[i]] = getPredictionResponse(predict(mod[[i]], newdata = newdata))
+    predi = apply(simplify2array(pred), 1, Mode)
+    } else {
+    for(i in 1:length(mod))
+      pred[[i]] = getPredictionProbabilities(predict(mod[[i]], newdata = newdata))
+    predi = apply(simplify2array(pred), 1:2, mean)
+  }
+  factor(predi, levels = levels(pred[[1]])[1:3])
+}
+
+
 
 makeRLearner.classif.autoMlr = function() {
   makeRLearnerClassif(
@@ -64,7 +79,7 @@ trainLearner.classif.autoMlr = function (.learner, .task, .subset, .weights = NU
 
 predictLearner.classif.autoMlr = function (.learner, .model, .newdata, ...) 
 {
-  predict(.model$learner.model, newdata = .newdata, method = predict.method,  ...)
+  predict(.model$learner.model, newdata = .newdata, predict.type = .learner$predict.type,  ...)
 }
 
 

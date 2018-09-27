@@ -21,6 +21,9 @@ configureMlr(on.learner.error = "warn")
 measures = list(mmce, timetrain) #list(mmce, multiclass.au1p, multiclass.brier, logloss, timetrain)
 configureMlr(on.learner.error = "warn")
 set.seed(126)
+mod = train(lrns[[1]], iris.task)
+predict(mod, iris.task)
+
 bmr1 = benchmark(lrns, iris.task, rdesc, measures)
 bmr1
 
