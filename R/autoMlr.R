@@ -23,16 +23,24 @@ autoMlr = function(task, runtime) {
   lrn.name = paste0(type, ".liquidSVM")
   lrn[[4]] = makeLearner(cl = lrn.name)
   lrn.name = paste0(type, ".tuneRanger")
-  lrn[[5]] = makeLearner(cl = lrn.name, par.vals = as.list(time.budget = 900))
+  lrn[[5]] = makeLearner(cl = lrn.name, par.vals = list(time.budget = 900))
   lrn.name = paste0(type, ".autoxgboost")
-  lrn[[6]] = makeLearner(cl = lrn.name, par.vals = as.list(time.budget = 1800))
+  lrn[[6]] = makeLearner(cl = lrn.name, par.vals = list(time.budget = 1800))
 
   # make weighted learner?
-  lrn = makeStackedLearner(base.learners = list(lrn1, lrn2, lrn3, lrn4, lrn5, lrn6), predict.type = "prob", method = "hill.climb")
+  mod = list()
+  for(i in 1:length(lrn))
+    mod[[i]] = train(lrn[[i]], task)
   
-  mod = train(lrn, task)
+  class(mod) = "autoMlr"
   
   return(mod)
+}
+
+predict.autoMlr = function(mod, task) {
+  pred = list()
+  for(i in 1:length(mod))
+    pred[[i]] = predict(mod[[i]], task)
 }
 
 makeRLearner.classif.autoMlr = function() {
