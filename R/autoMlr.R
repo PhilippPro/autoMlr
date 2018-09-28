@@ -14,6 +14,7 @@ autoMlr = function(task, runtime) {
   lrn = list()
   #lrn.name = ifelse(type == "regr", "regr.lm", "classif.logreg")
   #lrn0 = makeLearner(cl = lrn.name, predict.type = "prob")
+  # use multiple defaults!
   lrn.names = paste0(type, ".", c("glmnet", "rpart", "kknn", "liquidSVM")) #, "tuneRanger")) , "autoxgboost"))
   lrn[[1]] = makeLearner(cl = lrn.names[[1]], par.vals = as.list(defaults$glmnet$default[1,]))
   lrn[[2]] = makeLearner(cl = lrn.names[[2]], par.vals = as.list(defaults$rpart$default[1,]))
@@ -28,7 +29,7 @@ autoMlr = function(task, runtime) {
     mod[[i]] = train(lrn[[i]], task)
   
   # super learner
-  # better make the training on a holdout-dataset?! (should be a parameter)
+  # better make the training on a holdout-dataset (blending) or with CV?! (should be a parameter)
   # not suitable for small datasets
   # class probabilities are much better (liquidSVM?) -> Multi-Target problem (multi-response least squares in Ting and Witten, 1999)
   # add features as input! (Sill, et. al, 2009)
