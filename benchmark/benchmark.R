@@ -13,7 +13,8 @@ load_all("../autoMlr")
 
 
 lrns = list(
-  makeLearner("classif.autoMlr")
+  makeLearner("classif.autoMlr"),
+  makeLearner("classif.ranger")
 )
 
 rdesc = makeResampleDesc("Holdout")
